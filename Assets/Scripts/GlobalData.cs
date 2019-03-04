@@ -10,6 +10,8 @@ namespace Global
     public class GlobalData
     {
         public const string ANI_action = "action";
+        public const string ANI_jump = "jump";
+        public const string ANI_isGround = "isGround";
     }
 }
 

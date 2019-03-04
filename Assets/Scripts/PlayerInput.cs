@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Custom.Log;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +7,14 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
-    public bool inputEnable = true;
+    public bool inputEnable = true;                                         //  Flag  inpu模块开关
     public Axis vertical = new Axis(KeyCode.W, KeyCode.S);
     public Axis horizontal = new Axis(KeyCode.D, KeyCode.A);
-    public KeyCode runKey = KeyCode.Space;
+    public KeyCode runKey = KeyCode.LeftShift;
+    public KeyCode jumpKey = KeyCode.Space;
     public bool run = false;
+    public bool jump = false;
+    private bool lastJump;
     
     /// <summary>
     /// 控制animator的数值
@@ -31,15 +35,30 @@ public class PlayerInput : MonoBehaviour
 #if UNITY_EDITOR
         vertical.inputEnable = horizontal.inputEnable = inputEnable;
 #endif
-        
+        //将正方形点转成圆形得点
         Vector2 tempVec2 = SquareToCircle(new Vector2(horizontal,vertical));
+        //当前位移得长度
         sqrtFlo = Mathf.Sqrt(tempVec2.y * tempVec2.y + tempVec2.x * tempVec2.x);
+        //当前位移得方向
         dirVec3 = (tempVec2.y * Vector3.forward + tempVec2.x * Vector3.right);
 
         run = Input.GetKey(runKey);
+
+        bool tempJump = Input.GetKey(jumpKey);
+        if (tempJump != lastJump && tempJump == true) {
+            jump = true;
+            //this.Log("jump trigger");
+        }
+        else
+            jump = false;
+        lastJump = tempJump;
     }
 
-
+    /// <summary>
+    /// 将正方体的所有点转换成球形上的点
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     public Vector2 SquareToCircle(Vector2 input) {
         Vector2 output = Vector2.zero;
         output.x = input.x * Mathf.Sqrt(1 - input.y * input.y  * 0.5f);
@@ -69,7 +88,7 @@ public class Axis {
             return 0;
 
         float tempFlo = (Input.GetKey(axis.positiveKey) ? 1 : 0) - (Input.GetKey(axis.negativeKey) ? 1 : 0);
-        axis.smoothFlo =  Mathf.SmoothDamp(axis.smoothFlo, tempFlo, ref axis.velocityFlo, 0.2f);
+        axis.smoothFlo =  Mathf.SmoothDamp(axis.smoothFlo, tempFlo, ref axis.velocityFlo, 0.1f);
         return axis.smoothFlo;
     }
 
