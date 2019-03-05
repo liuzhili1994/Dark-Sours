@@ -11,7 +11,7 @@ public class OnGroundSensor : MonoBehaviour
     private Vector3 point1;
     private Vector3 point2;
     private float radius;
-    private Collider[] tempColliders;
+    public Collider[] tempColliders;
     public float offset = 0.1f;
 
     // Start is called before the first frame update

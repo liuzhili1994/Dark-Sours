@@ -101,6 +101,10 @@ public class PlayerCtrl : MonoBehaviour
         //this.Log("ExitJump");
     }//ExitJump_End
 
+    public void EnterGround() {
+       
+    }
+
     #endregion
 
 }

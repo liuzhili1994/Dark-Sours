@@ -12,6 +12,8 @@ namespace Global
         public const string ANI_action = "action";
         public const string ANI_jump = "jump";
         public const string ANI_isGround = "isGround";
+
+        public const string TAG_Ground = "Ground";
     }
 }
 
