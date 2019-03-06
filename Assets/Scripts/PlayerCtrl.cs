@@ -57,10 +57,15 @@ public class PlayerCtrl : MonoBehaviour
         if(!lockPlanner)
             movingVec3 = playerInput.dirVec3 * walkSpeed  * (playerInput.run ? runSpeed : 1);
         //单次触发jump逻辑
-        if(playerInput.jump && playerInput.run)
+        if(playerInput.jump )
             ani.SetTrigger(GlobalData.ANI_jump);
 
         ani.SetBool(GlobalData.ANI_isGround,isGround);
+
+        if (rig.velocity.magnitude > 2f)
+        {
+           ani.SetTrigger(GlobalData.ANI_roll);
+        }
                
     }//Update_End
 
@@ -96,13 +101,23 @@ public class PlayerCtrl : MonoBehaviour
     {
         //开始输入
         playerInput.InputEnable = true;
-        //关闭平面锁定   使主角方向向量随这input输入改变
-        lockPlanner = false;
+        
         //this.Log("ExitJump");
     }//ExitJump_End
 
     public void EnterGround() {
-       
+        //关闭平面锁定   使主角方向向量随这input输入改变
+        lockPlanner = false;
+        playerInput.InputEnable = true;
+    }
+
+    public void EnterRoll() {
+        //关闭输入  防止跳跃中左右旋转
+        playerInput.InputEnable = false;
+        //开启平面锁定  一旦关闭输入 则主角的方向向量会重置未vector3.zero  主角跳不走了
+        lockPlanner = true;
+        //跳跃y方向  增量
+        //jumpVelocityVec3 = new Vector3(0, jumpVelocityFlo, 0);
     }
 
     #endregion
